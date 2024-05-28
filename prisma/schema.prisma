@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Utilisateur {
+  id             Int             @id @default(autoincrement())
+  id_profile     Int             @unique
+  firstname      String
+  lastname       String
+  email          String          @unique
+  password       String
+  isAdmin        Boolean         @default(false)
+  date_creation  DateTime        @default(now())
+  date_modification DateTime     @updatedAt
+  profiles       Profile[]
+  posts          Post[]
+  likes          Aime[]
+  comments       Commentaire[]
+  followers      Follower[] @relation("followers")
+  following      Follower[] @relation("following")
+}
+
+// Profile table
+model Profile {
+  id             Int             @id @default(autoincrement())
+  id_utilisateur Int             @unique
+  sexe           String
+  pays           String
+  ville          String
+  date_creation  DateTime        @default(now())
+  date_modification DateTime     @updatedAt
+  utilisateur    Utilisateur     @relation(fields: [id_utilisateur], references: [id])
+}
+
+// Post table
+model Post {
+  id              Int             @id @default(autoincrement())
+  utilisateur_id  Int
+  caption         String
+  date_creation   DateTime        @default(now())
+  date_modification DateTime      @updatedAt
+  likes           Aime[]
+  comments        Commentaire[]
+  likesCount      Int             @default(0)
+  utilisateur     Utilisateur     @relation(fields: [utilisateur_id], references: [id])
+}
+
+// Like table
+model Aime {
+  id             Int             @id @default(autoincrement())
+  utilisateur_id Int
+  post_id        Int
+  date_creation  DateTime        @default(now())
+  utilisateur    Utilisateur     @relation(fields: [utilisateur_id], references: [id])
+  post           Post            @relation(fields: [post_id], references: [id])
+}
+
+// Comment table
+model Commentaire {
+  id             Int             @id @default(autoincrement())
+  utilisateur_id Int
+  post_id        Int
+  message        String
+  date_creation  DateTime        @default(now())
+  utilisateur    Utilisateur     @relation(fields: [utilisateur_id], references: [id])
+  post           Post            @relation(fields: [post_id], references: [id])
+}
+
+// Follower table
+model Follower {
+  id             Int             @id @default(autoincrement())
+  following_id   Int
+  follower_id    Int
+  date_creation  DateTime        @default(now())
+  following      Utilisateur     @relation("following", fields: [following_id], references: [id])
+  follower       Utilisateur     @relation("followers", fields: [follower_id], references: [id])
+}
