@@ -26,7 +26,6 @@ model Utilisateur {
   following      Follower[] @relation("following")
 }
 
-// Profile table
 model Profile {
   id             Int             @id @default(autoincrement())
   id_utilisateur Int             @unique
@@ -38,11 +37,11 @@ model Profile {
   utilisateur    Utilisateur     @relation(fields: [id_utilisateur], references: [id])
 }
 
-// Post table
 model Post {
   id              Int             @id @default(autoincrement())
   utilisateur_id  Int
   caption         String
+  image_url       String          // Added this field
   date_creation   DateTime        @default(now())
   date_modification DateTime      @updatedAt
   likes           Aime[]
@@ -51,7 +50,6 @@ model Post {
   utilisateur     Utilisateur     @relation(fields: [utilisateur_id], references: [id])
 }
 
-// Like table
 model Aime {
   id             Int             @id @default(autoincrement())
   utilisateur_id Int
@@ -61,7 +59,6 @@ model Aime {
   post           Post            @relation(fields: [post_id], references: [id])
 }
 
-// Comment table
 model Commentaire {
   id             Int             @id @default(autoincrement())
   utilisateur_id Int
@@ -72,7 +69,6 @@ model Commentaire {
   post           Post            @relation(fields: [post_id], references: [id])
 }
 
-// Follower table
 model Follower {
   id             Int             @id @default(autoincrement())
   following_id   Int

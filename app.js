@@ -9,6 +9,13 @@ const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
+// importing route files
+const postRoutes = require("./routes/PostRoutes");
+const followerRoutes = require("./routes/FollowerRoutes");
+
+// Mounting the routes
+app.use("/api/posts", postRoutes)
+app.use("/api/followers", followerRoutes);
 
 
 const PORT = process.env.PORT || 5000;
