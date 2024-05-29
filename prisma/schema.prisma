@@ -43,6 +43,7 @@ model Post {
   id              Int             @id @default(autoincrement())
   utilisateur_id  Int
   caption         String
+  image_url       String
   date_creation   DateTime        @default(now())
   date_modification DateTime      @updatedAt
   likes           Aime[]

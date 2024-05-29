@@ -1,16 +1,9 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { router: authRouter, authMiddleware } = require('./AuthController');
+const { registerUser, loginUser } = require('../controllers/AuthController');
 
-const app = express();
-const PORT = process.env.PORT || 8000;
+const router = express.Router();
 
-app.use(bodyParser.json());
-app.use('/auth', authRouter);
-app.get('/protected', authMiddleware, (req, res) => {
-    res.json({ message: 'This is a protected route', userId: req.userId });
-});
+router.post('/register', registerUser);
+router.post('/login', loginUser);
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+module.exports = router;
