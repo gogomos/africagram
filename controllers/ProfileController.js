@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const profileController = {
     // Get profile by user ID
-    getProfile: async (req, res) => {
+    getProfileByID: async (req, res) => {
         const { user_id } = req.params;
 
         try {

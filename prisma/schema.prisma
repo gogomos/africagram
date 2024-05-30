@@ -9,33 +9,34 @@ datasource db {
 
 
 model Utilisateur {
-  id             Int             @id @default(autoincrement())
-  id_profile     Int             @unique
-  firstname      String
-  lastname       String
-  email          String          @unique
-  password       String
-  isAdmin        Boolean         @default(false)
-  date_creation  DateTime        @default(now())
-  date_modification DateTime     @updatedAt
-  profiles       Profile[]
-  posts          Post[]
-  likes          Aime[]
-  comments       Commentaire[]
-  followers      Follower[] @relation("followers")
-  following      Follower[] @relation("following")
+  id                Int       @id @default(autoincrement())
+  firstname         String
+  lastname          String
+  email             String    @unique
+  password          String
+  isAdmin           Boolean   @default(false)
+  date_creation     DateTime  @default(now())
+  date_modification DateTime  @updatedAt
+  profileId         Int?      // Foreign key for Profile, nullable
+  profile           Profile?  @relation("UserProfile") // to establish the relation without specifying fields and references.
+  posts             Post[]
+  likes             Aime[]
+  comments          Commentaire[]
+  followers         Follower[] @relation("followers")
+  following         Follower[] @relation("following")
 }
 
 model Profile {
-  id             Int             @id @default(autoincrement())
-  id_utilisateur Int             @unique
-  sexe           String
-  pays           String
-  ville          String
-  date_creation  DateTime        @default(now())
-  date_modification DateTime     @updatedAt
-  utilisateur    Utilisateur     @relation(fields: [id_utilisateur], references: [id])
+  id                Int       @id @default(autoincrement())
+  utilisateur_id    Int       @unique
+  sexe              String
+  pays              String
+  ville             String
+  date_creation     DateTime  @default(now())
+  date_modification DateTime  @updatedAt
+  utilisateur       Utilisateur @relation(fields: [utilisateur_id], references: [id], name: "UserProfile")
 }
+
 
 model Post {
   id              Int             @id @default(autoincrement())

@@ -46,6 +46,28 @@ const commentController = {
             res.status(500).json({ error: "Internal Server Error" });
         }
     },
+
+    // Get all comments for a specific post
+    getAllComments: async (req, res) => {
+        const { post_id } = req.params;
+
+        try {
+            const comments = await prisma.commentaire.findMany({
+                where: { post_id: parseInt(post_id) },
+                orderBy: { date_creation: 'desc' },
+                include: {
+                    utilisateur: {
+                        select: { firstname: true, lastname: true }  // Assuming you want to include user details
+                    }
+                }
+            });
+
+            res.json(comments);
+        } catch (error) {
+            console.error("Error fetching comments:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    },
 };
 
 module.exports = commentController;
