@@ -13,19 +13,51 @@ const getUserCount = async (req, res) => {
     }
 };
 
-const getPostCountByUser = async (req, res) => {
+const getUsersCountByCountry = async (req, res) => {
     try {
-        const userId = parseInt(req.params.id);
-
-        const postCount = await prisma.post.count({
-            where: { utilisateur_id: userId },
+        const usersByCountry = await prisma.utilisateur.groupBy({
+            by: ['pays'],
+            _count: {
+                id: true
+            }
         });
 
-        res.json({ postCount });
+        res.json({ usersByCountry });
     } catch (error) {
-        console.error('Error retrieving post count:', error);
+        console.error('Error retrieving users by country:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
 
-module.exports = { getUserCount, getPostCountByUser };
+const getAveragePostsPerUser = async (req, res) => {
+    try {
+        const averagePostsPerUser = await prisma.utilisateur.aggregate({
+            _avg: {
+                posts: true
+            }
+        });
+
+        res.json({ averagePostsPerUser });
+    } catch (error) {
+        console.error('Error retrieving average posts per user:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const getGenderDistribution = async (req, res) => {
+    try {
+        const genderDistribution = await prisma.profile.groupBy({
+            by: ['sexe'],
+            _count: {
+                id: true
+            }
+        });
+
+        res.json({ genderDistribution });
+    } catch (error) {
+        console.error('Error retrieving gender distribution:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+module.exports = { getUserCount,getUsersCountByCountry,getAveragePostsPerUser,getGenderDistribution };

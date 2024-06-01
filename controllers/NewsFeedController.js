@@ -4,6 +4,11 @@ const prisma = new PrismaClient();
 
 const getNewsFeed = async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = 5; 
+
+        const skip = (page - 1) * pageSize;
+
         const posts = await prisma.post.findMany({
             orderBy: { date_creation: 'desc' },
             include: {
@@ -15,6 +20,8 @@ const getNewsFeed = async (req, res) => {
                     },
                 },
             },
+            skip,
+            take: pageSize,
         });
 
         res.json(posts);

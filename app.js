@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
-// importing route files
+
 const authRoutes = require('./routes/AuthRoutes');
 const postRoutes = require("./routes/PostRoutes");
 const followerRoutes = require("./routes/FollowerRoutes");
@@ -20,7 +20,6 @@ const profileRoutes = require("./routes/ProfileRoutes");
 const statisticsRoutes = require("./routes/StatisticsRoutes");
 const UserRoutes = require("./routes/UserRoutes");
 
-// Mounting the routes
 app.use("/api/posts", postRoutes)
 app.use("/api/followers", followerRoutes);
 app.use("/api/comments", commentRoutes);
