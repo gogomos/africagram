@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const postController = {
     getMyPosts: async (req, res) => {
-        const userId = req.user.id;
+        const userId = req.userId;
 
         try {
             const posts = await prisma.post.findMany({
@@ -36,12 +36,13 @@ const postController = {
     },
 
     createPost: async (req, res) => {
-        const userId = req.user.id;
+        const userId = req.userId;
         const { caption } = req.body;
         const { file } = req;
 
         try {
             const image = file ? await cloudinary.uploader.upload(file.path) : null;
+            console.log(image);
 
             const newPost = await prisma.post.create({
                 data: {
@@ -60,7 +61,7 @@ const postController = {
     },
 
     updatePost: async (req, res) => {
-        const userId = req.user.id;
+        const userId = req.userId;
         const { id } = req.params;
         const { caption } = req.body;
         const { file } = req;
@@ -97,7 +98,7 @@ const postController = {
     },
 
     deletePost: async (req, res) => {
-        const userId = req.user.id;
+        const userId = req.userId;
         const { id } = req.params;
 
         try {

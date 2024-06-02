@@ -5,8 +5,8 @@ const followerController = {
     // Follow a user
     followUser: async (req, res) => {
         const { following_id } = req.body;
-        const follower_id = req.user.id;
-
+        const userId = req.userId;
+        const follower_id = userId;
         try {
             // Check if the user is trying to follow themselves
             if (following_id === follower_id) {
@@ -42,7 +42,8 @@ const followerController = {
     // Unfollow a user
     unfollowUser: async (req, res) => {
         const { following_id } = req.body;
-        const follower_id = req.user.id;
+        userId = req.userId;    
+        const follower_id = userId;
 
         try {
             // Check if the user is trying to unfollow themselves

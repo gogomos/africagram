@@ -5,13 +5,13 @@ const likesController = {
     // Like a post
     likePost: async (req, res) => {
         const { post_id } = req.body;
-        const user_id = req.user.id;
+        const userId = req.userId;
 
         try {
             // Check if the user has already liked the post
             const existingLike = await prisma.aime.findFirst({
                 where: {
-                    utilisateur_id: user_id,
+                    utilisateur_id: userId,
                     post_id,
                 },
             });
@@ -22,7 +22,7 @@ const likesController = {
             // Create a new like entry
             const newLike = await prisma.aime.create({
                 data: {
-                    utilisateur_id: user_id,
+                    utilisateur_id: userId,
                     post_id,
                 },
             });
@@ -47,13 +47,13 @@ const likesController = {
     // Unlike a post
     unlikePost: async (req, res) => {
         const { post_id } = req.body;
-        const user_id = req.user.id;
+        const userId = req.userId;
 
         try {
             // Check if the user has already liked the post
             const existingLike = await prisma.aime.findFirst({
                 where: {
-                    utilisateur_id: user_id,
+                    utilisateur_id: userId,
                     post_id,
                 },
             });
@@ -64,7 +64,7 @@ const likesController = {
             // Delete the like entry
             await prisma.aime.delete({
                 where: {
-                    utilisateur_id: user_id,
+                    utilisateur_id: userId,
                     post_id,
                 },
             });

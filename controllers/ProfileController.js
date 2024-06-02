@@ -2,13 +2,12 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const profileController = {
-    // Get profile by user ID
     getProfileByID: async (req, res) => {
         const { user_id } = req.params;
 
         try {
             const profile = await prisma.profile.findUnique({
-                where: { id_utilisateur: parseInt(user_id) },
+                where: { utilisateur_id: parseInt(user_id) },
             });
 
             if (!profile) {
@@ -22,21 +21,34 @@ const profileController = {
         }
     },
 
-    // Create profile
     createProfile: async (req, res) => {
-        const { user_id } = req.params;
+        const userId = req.userId;
         const { sexe, pays, ville } = req.body;
 
         try {
+            const existingProfile = await prisma.profile.findFirst({
+                where: {
+                    utilisateur_id: userId // Assuming req.userId is set by your authentication middleware
+                }
+            });
+    
+            if (existingProfile) {
+                return res.status(400).json({ error: 'User already has a profile' });
+            }
             const newProfile = await prisma.profile.create({
                 data: {
-                    id_utilisateur: parseInt(user_id),
+                    utilisateur_id: parseInt(userId),
                     sexe,
                     pays,
                     ville,
                     date_creation: new Date(),
                     date_modification: new Date(),
                 },
+            });
+
+            await prisma.utilisateur.update({
+                where: { id: parseInt(userId) },
+                data: { profileId: newProfile.id },
             });
 
             res.status(201).json(newProfile);
@@ -46,14 +58,13 @@ const profileController = {
         }
     },
 
-    // Update profile
     updateProfile: async (req, res) => {
         const { user_id } = req.params;
         const { sexe, pays, ville } = req.body;
 
         try {
             const updatedProfile = await prisma.profile.update({
-                where: { id_utilisateur: parseInt(user_id) },
+                where: { utilisateur_id: parseInt(user_id) },
                 data: {
                     sexe,
                     pays,
@@ -69,13 +80,12 @@ const profileController = {
         }
     },
 
-    // Delete profile
     deleteProfile: async (req, res) => {
         const { user_id } = req.params;
 
         try {
             await prisma.profile.delete({
-                where: { id_utilisateur: parseInt(user_id) },
+                where: { utilisateur_id: parseInt(user_id) },
             });
 
             res.json({ message: "Profile deleted successfully" });

@@ -5,12 +5,12 @@ const commentController = {
     // Create a comment
     createComment: async (req, res) => {
         const { post_id, message } = req.body;
-        const user_id = req.user.id;
+        const userId = req.userId;
 
         try {
             const newComment = await prisma.commentaire.create({
                 data: {
-                    utilisateur_id: user_id,
+                    utilisateur_id: userId,
                     post_id,
                     message,
                 },

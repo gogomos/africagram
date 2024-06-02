@@ -5,7 +5,7 @@ const { PrismaClient } = require('@prisma/client');
 
 dotenv.config();
 const app = express();
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 
 app.use(cors());

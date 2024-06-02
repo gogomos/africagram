@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const registerUser = async (req, res) => {
-const { id_profile, firstname, lastname, email, password } = req.body;
+const { firstname, lastname, email, password } = req.body;
 
 const existingUser = await prisma.utilisateur.findUnique({
 where: { email },
@@ -20,7 +20,6 @@ const hashedPassword = await bcrypt.hash(password, 10);
 
 const newUser = await prisma.utilisateur.create({
 data: {
-    id_profile,
     firstname,
     lastname,
     email,
