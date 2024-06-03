@@ -48,6 +48,7 @@ return res.status(401).json({ error: 'Invalid email or password' });
 }
 
 const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
+res.set('Authorization', `Bearer ${token}`);
 
 res.json({ token });
 };

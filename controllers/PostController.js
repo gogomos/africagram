@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const cloudinary = require('../config/cloudinary');
+const upload = require('../config/multer');
 const prisma = new PrismaClient();
 
 const postController = {
@@ -35,25 +36,74 @@ const postController = {
         }
     },
 
+    // createPost: async (req, res) => {
+    //     const userId = req.userId;
+    //     // console.log("-----------------------------------------------------------");
+    //     // console.log(req.body);
+    //     const { caption} = req.body;
+    //     // console.log(image_url);
+    //     const file  = req.file;
+    //     console.log(file);
+    //     console.log(caption);
+
+    //     try {
+    //         const image = file ? await cloudinary.uploader.upload(file.path) : "null";
+    //         // console.log(image);
+
+    //         const newPost = await prisma.post.create({
+    //             data: {
+    //                 utilisateur_id: userId,
+    //                 caption: caption,
+    //                 image_url: image ? image.secure_url : null,
+    //                 // image_url: image_url,
+    //                 date_creation: new Date(),
+    //                 date_modification: new Date(),
+    //                 // utilisateur: {
+    //                 //     connect: { id: userId }
+    //                 // }
+    //             },
+    //         });
+    //         res.status(201).json(newPost);
+    //     } catch (error) {
+    //         console.error('Error creating post:', error);
+    //         res.status(500).json({ error: 'Internal Server Error' });
+    //     }
+    // },
     createPost: async (req, res) => {
         const userId = req.userId;
         const { caption } = req.body;
-        const { file } = req;
 
         try {
-            const image = file ? await cloudinary.uploader.upload(file.path) : null;
-            console.log(image);
+            // Call multer middleware to handle file upload
+            upload(req, res, async function (err) {
+                if (err) {
+                    console.error('Error uploading file:', err);
+                    return res.status(500).json({ error: 'Error uploading file' });
+                }
 
-            const newPost = await prisma.post.create({
-                data: {
-                    utilisateur_id: userId,
-                    caption,
-                    image_url: image ? image.secure_url : null,
-                    date_creation: new Date(),
-                    date_modification: new Date(),
-                },
+                // Check if file is present
+                const file = req.file;
+
+                // If file is present, upload to Cloudinary
+                let image_url = null;
+                if (file) {
+                    const result = await cloudinary.uploader.upload(file.path);
+                    image_url = result.secure_url;
+                }
+
+                // Create new post
+                const newPost = await prisma.post.create({
+                    data: {
+                        utilisateur_id: userId,
+                        caption: caption,
+                        image_url: image_url,
+                        date_creation: new Date(),
+                        date_modification: new Date(),
+                    },
+                });
+
+                res.status(201).json(newPost);
             });
-            res.status(201).json(newPost);
         } catch (error) {
             console.error('Error creating post:', error);
             res.status(500).json({ error: 'Internal Server Error' });
