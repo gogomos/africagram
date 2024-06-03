@@ -72,17 +72,15 @@ const postController = {
     createPost: async (req, res) => {
         const userId = req.userId;
         const { caption } = req.body;
+        console.log(req.body);
 
         try {
             // Call multer middleware to handle file upload
-            upload(req, res, async function (err) {
-                if (err) {
-                    console.error('Error uploading file:', err);
-                    return res.status(500).json({ error: 'Error uploading file' });
-                }
+           
 
                 // Check if file is present
                 const file = req.file;
+                // console.log(file);
 
                 // If file is present, upload to Cloudinary
                 let image_url = null;
@@ -103,7 +101,6 @@ const postController = {
                 });
 
                 res.status(201).json(newPost);
-            });
         } catch (error) {
             console.error('Error creating post:', error);
             res.status(500).json({ error: 'Internal Server Error' });

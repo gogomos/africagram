@@ -6,8 +6,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const authMiddleware = (req, res, next) => {
     // console.log('Request Headers:', req.headers);
+    
     const authHeader = req.headers.authorization;
-    console.log('Authorization Header:', authHeader);
+    // console.log('Authorization Header:', authHeader);
 
     if (!authHeader) {
         return res.status(401).json({ error: 'Authorization header required' });
