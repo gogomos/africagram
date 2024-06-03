@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/',authMiddleware,postController.getMyPosts);
 router.get('/:id',authMiddleware,postController.getById);
 router.post('/',authMiddleware, upload, postController.createPost);
-router.put('/:id',authMiddleware, postController.updatePost);
+router.put('/:id',authMiddleware,upload,  postController.updatePost);
 router.delete('/:id', authMiddleware, postController.deletePost);
 
 module.exports = router;

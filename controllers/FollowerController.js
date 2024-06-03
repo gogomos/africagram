@@ -42,39 +42,42 @@ const followerController = {
     // Unfollow a user
     unfollowUser: async (req, res) => {
         const { following_id } = req.body;
-        userId = req.userId;    
-        const follower_id = userId;
+    const userId = req.userId;
+    const follower_id = userId;
 
-        try {
-            // Check if the user is trying to unfollow themselves
-            if (following_id === follower_id) {
-                return res.status(400).json({ error: "Cannot unfollow yourself" });
-            }
-
-            // Check if the user is already not following the target user
-            const existingFollow = await prisma.follower.findFirst({
-                where: {
-                    follower_id,
-                    following_id,
-                },
-            });
-            if (!existingFollow) {
-                return res.status(400).json({ error: "Not following this user" });
-            }
-
-            // Delete the follower entry
-            await prisma.follower.delete({
-                where: {
-                    follower_id,
-                    following_id,
-                },
-            });
-
-            res.json({ message: "User unfollowed successfully" });
-        } catch (error) {
-            console.error("Error unfollowing user:", error);
-            res.status(500).json({ error: "Internal Server Error" });
+    try {
+        // Check if the user is trying to unfollow themselves
+        if (following_id === follower_id) {
+            return res.status(400).json({ error: "Cannot unfollow yourself" });
         }
+
+        // Check if the user is already not following the target user
+        const existingFollow = await prisma.follower.findFirst({
+            where: {
+                follower_id,
+                following_id,
+            },
+        });
+
+        if (!existingFollow) {
+            return res.status(400).json({ error: "Not following this user" });
+        }
+
+        // Delete the follow entry using the composite unique constraint
+        await prisma.follower.delete({
+            where: {
+                follower_id_following_id: {
+                    follower_id,
+                    following_id,
+                },
+            },
+        });
+
+        res.json({ message: "User unfollowed successfully" });
+    } catch (error) {
+        console.error("Error unfollowing user:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
     },
 };
 

@@ -17,6 +17,8 @@ model aime {
 
   @@index([post_id], map: "Aime_post_id_fkey")
   @@index([utilisateur_id], map: "Aime_utilisateur_id_fkey")
+
+  @@unique([utilisateur_id, post_id])  // Add this line to create a composite unique constraint
 }
 
 model commentaire {
@@ -42,6 +44,8 @@ model follower {
 
   @@index([follower_id], map: "Follower_follower_id_fkey")
   @@index([following_id], map: "Follower_following_id_fkey")
+
+  @@unique([follower_id, following_id])  // Add this line to create a composite unique constraint
 }
 
 model post {
