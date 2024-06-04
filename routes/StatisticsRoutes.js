@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const statisticController = require('../controllers/StatisticsController');
+const { getUserCount,getUsersCountByCountry,getAveragePostsPerUser,getGenderDistribution } = require('../controllers/StatisticsController');
 
-router.get('/user-count', statisticController.getUserCount);
+router.get('/user-count', getUserCount);
 
-router.get('/users-count-by-country', statisticController.getUsersCountByCountry);
+router.get('/users-count-by-country', getUsersCountByCountry);
 
-router.get('/average-posts-per-user', statisticController.getAveragePostsPerUser);
+router.get('/average-posts-per-user', getAveragePostsPerUser);
 
-router.get('/gender-distribution', statisticController.getGenderDistribution);
+router.get('/gender-distribution', getGenderDistribution);
 
 module.exports = router;

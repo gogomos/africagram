@@ -12,8 +12,8 @@ model aime {
   utilisateur_id Int
   post_id        Int
   date_creation  DateTime    @default(now())
-  post           post        @relation(fields: [post_id], references: [id], map: "Aime_post_id_fkey")
-  utilisateur    utilisateur @relation(fields: [utilisateur_id], references: [id], map: "Aime_utilisateur_id_fkey")
+  post           post        @relation(fields: [post_id], references: [id], onDelete: Cascade, map: "Aime_post_id_fkey")
+  utilisateur    utilisateur @relation(fields: [utilisateur_id], references: [id], onDelete: Cascade, map: "Aime_utilisateur_id_fkey")
 
   @@index([post_id], map: "Aime_post_id_fkey")
   @@index([utilisateur_id], map: "Aime_utilisateur_id_fkey")
@@ -27,8 +27,8 @@ model commentaire {
   post_id        Int
   message        String
   date_creation  DateTime    @default(now())
-  post           post        @relation(fields: [post_id], references: [id], map: "Commentaire_post_id_fkey")
-  utilisateur    utilisateur @relation(fields: [utilisateur_id], references: [id], map: "Commentaire_utilisateur_id_fkey")
+  post           post        @relation(fields: [post_id], references: [id], onDelete: Cascade, map: "Commentaire_post_id_fkey")
+  utilisateur    utilisateur @relation(fields: [utilisateur_id], references: [id], onDelete: Cascade, map: "Commentaire_utilisateur_id_fkey")
 
   @@index([post_id], map: "Commentaire_post_id_fkey")
   @@index([utilisateur_id], map: "Commentaire_utilisateur_id_fkey")
@@ -39,8 +39,8 @@ model follower {
   following_id                                   Int
   follower_id                                    Int
   date_creation                                  DateTime    @default(now())
-  utilisateur_follower_follower_idToutilisateur  utilisateur @relation("follower_follower_idToutilisateur", fields: [follower_id], references: [id], map: "Follower_follower_id_fkey")
-  utilisateur_follower_following_idToutilisateur utilisateur @relation("follower_following_idToutilisateur", fields: [following_id], references: [id], map: "Follower_following_id_fkey")
+  utilisateur_follower_follower_idToutilisateur  utilisateur @relation("follower_follower_idToutilisateur", fields: [follower_id], references: [id], onDelete: Cascade, map: "Follower_follower_id_fkey")
+  utilisateur_follower_following_idToutilisateur utilisateur @relation("follower_following_idToutilisateur", fields: [following_id], references: [id], onDelete: Cascade, map: "Follower_following_id_fkey")
 
   @@index([follower_id], map: "Follower_follower_id_fkey")
   @@index([following_id], map: "Follower_following_id_fkey")
@@ -58,7 +58,7 @@ model post {
   likesCount        Int           @default(0)
   aime              aime[]
   commentaire       commentaire[]
-  utilisateur       utilisateur?   @relation(fields: [utilisateur_id], references: [id], map: "Post_utilisateur_id_fkey")
+  utilisateur       utilisateur?  @relation(fields: [utilisateur_id], references: [id], onDelete: Cascade, map: "Post_utilisateur_id_fkey")
 
   @@index([utilisateur_id], map: "Post_utilisateur_id_fkey")
 }
@@ -71,7 +71,7 @@ model profile {
   ville             String
   date_creation     DateTime    @default(now())
   date_modification DateTime
-  utilisateur       utilisateur @relation(fields: [utilisateur_id], references: [id], map: "Profile_utilisateur_id_fkey")
+  utilisateur       utilisateur @relation(fields: [utilisateur_id], references: [id], onDelete: Cascade, map: "Profile_utilisateur_id_fkey")
 }
 
 model utilisateur {
@@ -82,7 +82,7 @@ model utilisateur {
   password                                    String
   isAdmin                                     Boolean       @default(false)
   date_creation                               DateTime      @default(now())
-  date_modification                           DateTime       @default(now())
+  date_modification                           DateTime      @default(now())
   profileId                                   Int?
   aime                                        aime[]
   commentaire                                 commentaire[]

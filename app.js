@@ -20,6 +20,8 @@ const commentRoutes = require("./routes/CommentRoutes");
 const likeRoutes = require("./routes/LikesRoutes");
 const profileRoutes = require("./routes/ProfileRoutes");
 const newsFeedRoutes = require("./routes/NewsFeedRoutes");
+const statisticsRoutes = require("./routes/StatisticsRoutes");
+const userRoutes = require("./routes/UserRoutes");
 
 // Mounting the routes
 app.use("/api/posts", postRoutes)
@@ -29,6 +31,8 @@ app.use("/api/likes", likeRoutes);
 app.use("/api/profiles", profileRoutes);
 app.use('/auth', authRoutes);
 app.use('/newsfeed', newsFeedRoutes);
+app.use('/api/statistics', statisticsRoutes);
+app.use('/api/users', userRoutes);
 
 app.use((error, req, res, next) => {
     res.status(500).json({ message: error.message });

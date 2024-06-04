@@ -15,7 +15,7 @@ const getUserCount = async (req, res) => {
 
 const getUsersCountByCountry = async (req, res) => {
     try {
-        const usersByCountry = await prisma.utilisateur.groupBy({
+        const usersByCountry = await prisma.profile.groupBy({
             by: ['pays'],
             _count: {
                 id: true
@@ -31,19 +31,22 @@ const getUsersCountByCountry = async (req, res) => {
 
 const getAveragePostsPerUser = async (req, res) => {
     try {
-        const averagePostsPerUser = await prisma.utilisateur.aggregate({
-            _avg: {
-                posts: true
+        const averagePostsPerUser = await prisma.post.groupBy({
+            by: ['utilisateur_id'],
+            _count: {
+                id: true
             }
         });
 
-        res.json({ averagePostsPerUser });
+        const totalPosts = averagePostsPerUser.reduce((sum, group) => sum + group._count.id, 0);
+        const average = totalPosts / averagePostsPerUser.length;
+
+        res.json({ averagePostsPerUser: average });
     } catch (error) {
         console.error('Error retrieving average posts per user:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 const getGenderDistribution = async (req, res) => {
     try {
         const genderDistribution = await prisma.profile.groupBy({
