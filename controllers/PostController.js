@@ -72,7 +72,7 @@ const postController = {
     createPost: async (req, res) => {
         const userId = req.userId;
         const { caption } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
 
         try {
             // Call multer middleware to handle file upload
