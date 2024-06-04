@@ -35,40 +35,6 @@ const postController = {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     },
-
-    // createPost: async (req, res) => {
-    //     const userId = req.userId;
-    //     // console.log("-----------------------------------------------------------");
-    //     // console.log(req.body);
-    //     const { caption} = req.body;
-    //     // console.log(image_url);
-    //     const file  = req.file;
-    //     console.log(file);
-    //     console.log(caption);
-
-    //     try {
-    //         const image = file ? await cloudinary.uploader.upload(file.path) : "null";
-    //         // console.log(image);
-
-    //         const newPost = await prisma.post.create({
-    //             data: {
-    //                 utilisateur_id: userId,
-    //                 caption: caption,
-    //                 image_url: image ? image.secure_url : null,
-    //                 // image_url: image_url,
-    //                 date_creation: new Date(),
-    //                 date_modification: new Date(),
-    //                 // utilisateur: {
-    //                 //     connect: { id: userId }
-    //                 // }
-    //             },
-    //         });
-    //         res.status(201).json(newPost);
-    //     } catch (error) {
-    //         console.error('Error creating post:', error);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // },
     createPost: async (req, res) => {
         const userId = req.userId;
         const { caption } = req.body;
